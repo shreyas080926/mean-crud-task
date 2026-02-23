@@ -1,27 +1,63 @@
-In this DevOps task, you need to build and deploy a full-stack CRUD application using the MEAN stack (MongoDB, Express, Angular 15, and Node.js). The backend will be developed with Node.js and Express to provide REST APIs, connecting to a MongoDB database. The frontend will be an Angular application utilizing HTTPClient for communication.  
+# MEAN Stack CRUD Application - DevOps Assignment
 
-The application will manage a collection of tutorials, where each tutorial includes an ID, title, description, and published status. Users will be able to create, retrieve, update, and delete tutorials. Additionally, a search box will allow users to find tutorials by title.
+This project contains a full-stack MEAN (MongoDB, Express, Angular, Node.js) application, containerized and ready for deployment with a CI/CD pipeline.
 
-## Project setup
+## Project Structure
 
-### Node.js Server
+- `backend/`: Express.js & Node.js API.
+- `frontend/`: Angular 15 application.
+- `nginx/`: Nginx reverse proxy configuration.
+- `docker-compose.yml`: Orchestrates MongoDB, Backend, and Frontend.
+- `.github/workflows/deploy.yml`: GitHub Actions pipeline.
 
-cd backend
+## Prerequisites
 
-npm install
+- [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed locally.
+- A Cloud VM (Ubuntu) with Docker installed.
+- A Docker Hub account.
 
-You can update the MongoDB credentials by modifying the `db.config.js` file located in `app/config/`.
+## Local Setup & Containerization
 
-Run `node server.js`
+1.  **Clone the repository**:
+    ```bash
+    git clone <your-repo-url>
+    cd <repo-name>
+    ```
 
-### Angular Client
+2.  **Run with Docker Compose**:
+    ```bash
+    docker-compose up --build
+    ```
+    - Frontend: `http://localhost` (Port 80 via Nginx)
+    - Backend API: `http://localhost:8080/api`
+    - MongoDB: `mongodb://localhost:27017`
 
-cd frontend
+## CI/CD Pipeline Configuration
 
-npm install
+The project uses GitHub Actions for CI/CD. To enable it:
 
-Run `ng serve --port 8081`
+1.  **Set up Repository Secrets** in GitHub:
+    - `DOCKER_USERNAME`: Your Docker Hub username.
+    - `DOCKER_PASSWORD`: Your Docker Hub password or access token.
+    - `VM_IP`: The public IP of your Ubuntu VM.
+    - `SSH_PRIVATE_KEY`: The private SSH key used to access your VM.
 
-You can modify the `src/app/services/tutorial.service.ts` file to adjust how the frontend interacts with the backend.
+2.  **Push to `main` branch**:
+    - Every push to the `main` branch will trigger the pipeline.
+    - It builds images, pushes them to Docker Hub, and automatically updates the app on your VM.
 
-Navigate to `http://localhost:8081/`
+## Deployment Details
+
+- **Nginx**: Acts as a reverse proxy. It serves the Angular frontend and routes all `/api` requests to the Node.js backend.
+- **Database**: MongoDB runs as a Docker container with persistent volume storage.
+- **Network**: All containers communicate within a dedicated bridge network.
+
+## Task Deliverables Status
+
+- [x] Dockerfiles for Frontend & Backend
+- [x] Docker Hub image push capability
+- [x] Docker Compose deployment
+- [x] MongoDB Docker integration
+- [x] GitHub Actions CI/CD Pipeline
+- [x] Nginx Reverse Proxy (Port 80)
+- [x] Documentation & README
