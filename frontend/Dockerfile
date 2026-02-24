@@ -8,13 +8,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY . .
 
-# Build the application
-RUN npm run build -- --configuration production
+# Build the application (increase memory for Angular's build)
+RUN node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build --configuration production
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine

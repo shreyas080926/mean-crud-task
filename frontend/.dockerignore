@@ -1,10 +1,4 @@
 node_modules
 npm-debug.log
 dist
-Dockerfile
-.dockerignore
 .git
-.gitignore
-README.md
-angular.json
-tsconfig.json
