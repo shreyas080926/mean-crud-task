@@ -1,20 +1,23 @@
 # Stage 1: Build Angular App
-FROM node:16 AS build
+FROM node:18-alpine AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Set memory limit for build
+ENV NODE_OPTIONS="--max_old_space_size=4096"
+
+# Copy package files
+COPY package.json package-lock.json* ./
 
 # Install dependencies
 RUN npm install --legacy-peer-deps
 
-# Copy the rest of the application code
+# Copy all project files (angular.json, tsconfig, src, etc.)
 COPY . .
 
-# Build the application (increase memory for Angular's build)
-RUN node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build --configuration production
+# Build Angular in production mode
+RUN npx ng build --configuration production
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
@@ -22,7 +25,7 @@ FROM nginx:alpine
 # Copy the Nginx configuration
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy build output to Nginx web root
+# Copy Angular build output to Nginx web root
 COPY --from=build /app/dist/angular-15-crud /usr/share/nginx/html
 
 # Expose port 80
