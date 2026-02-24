@@ -11,6 +11,7 @@ services:
       - db_data:/data/db
 
   backend:
+    image: ${DOCKER_USERNAME}/mean-backend:latest
     build: ./backend
     container_name: backend
     restart: always
@@ -22,6 +23,7 @@ services:
       - db
 
   frontend:
+    image: ${DOCKER_USERNAME}/mean-frontend:latest
     build: ./frontend
     container_name: frontend
     restart: always

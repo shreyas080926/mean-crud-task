@@ -55,6 +55,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/mean-app
+            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker-compose pull
             docker-compose up -d
